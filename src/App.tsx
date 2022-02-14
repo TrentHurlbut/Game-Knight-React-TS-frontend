@@ -65,12 +65,15 @@ function App() {
     <Router>
       {/* The navbar is always visible. */}
       <NavBar user={user} logout={logoutHandler} avatar={avatar} auth={token} />
+
       <Routes>
+
         {/* Login */}
         <Route
           path="/login"
           element={<Login setAuth={setAuth} updateAvatar={updateAvatar} />}
         />
+
         {/* Registration */}
         <Route
           path="/registration"
@@ -78,8 +81,10 @@ function App() {
             <Registration setAuth={setAuth} updateAvatar={updateAvatar} />
           }
         />
+
         {/* Homepage where logged out or unregistered users land. */}
         <Route path="/" element={<Home />} />
+
         {/* Account Settings */}
         <Route
           path="/user_page/:user"
@@ -93,40 +98,56 @@ function App() {
             />
           }
         />
+
+        {/* Add Games */}
         <Route path="/search" element={<Search token={token} user={user} />} />
+
+        {/* Zoomed-in information for each game in a user's collection. */}
         <Route
           path="games/:gameId"
           element={<GameInfoPage token={token} user={user} />}
         />
+
+        {/* A user's playstsats page where information on board game playrate and game knight success are visible after
+        a user has hosted and receieved feedback on a certain ammount of knights. */}
         <Route
           path="play_stats/:user"
           element={<PlayStats user={user} token={token} />}
         />
+
+        {/* The Create Event page. */}
         <Route
           path="/createevent"
           element={<CreateEvent user={user} token={token} />}
         />
+
+        {/* The form which invitees are able to access to vote on which games they would like to play at their game knight. */}
         <Route
           path="/game_night/:gameId"
           element={<VotingForm token={token} />}
         />
+
+        {/* The form with which attendees of a game knight provide feedback to their host. */}
         <Route path="/game_night/:gameId/feedback" element={<FeedbackForm />} />
+
+        {/* The page that shows all a user's currently active and past game knights. Name deprecated. */}
         <Route
           path="/game_night/"
           element={<GameNightMenu user={user} token={token} />}
         />
+
+        {/* Once a game knight is finalized, a user can see its associated details in the owner view. */}
         <Route
           path="/game_night/:gameNightId/finalize"
           element={<GameNightOwnerView token={token} />}
         />
+
+        {/* A user's collection page. */}
         <Route
           path="/collection/:user"
           element={<CollectionPage user={user} token={token} />}
         />
-        <Route
-          path="/collection/"
-          element={<Login setAuth={setAuth} updateAvatar={updateAvatar} />}
-        />
+
       </Routes>
     </Router>
   );
