@@ -1,9 +1,11 @@
-import { useState } from 'react';
+//Packages that take care of navigation, API requests, and state storage.
 import './App.css';
 import axios from 'axios';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import useLocalStorageState from 'use-local-storage-state';
+
+//Components used throughout the site.
 import Login from './routes/Login';
 import Registration from './routes/Registration';
 import AccountSettings from './routes/AccountSettings';
@@ -14,25 +16,32 @@ import PlayStats from './routes/PlayStats';
 import CreateEvent from './routes/CreateEvent';
 import VotingForm from './routes/VotingForm';
 import CollectionPage from './routes/CollectionPage';
-import Wishlist from './components/Wishlist';
 import GameNightMenu from './routes/GameNightMenu';
 import GameNightOwnerView from './routes/GameNightOwnerView';
 import FeedbackForm from './routes/FeedbackForm';
 
 function App() {
+  //At the top level, this app keeps in local storage the name of the currently logged in user, their auth token, and the image URL
+  //associtated with their account. This is to populate the navbar and to send these pieces of information along when making
+  //requests to the back end.
   const [user, setUser] = useLocalStorageState('gameMasterUser', '');
   const [token, setToken] = useLocalStorageState('gameMasterToken', '');
   const [avatar, setAvatar] = useLocalStorageState('gameMasterAvatar', '');
 
+  //This function sets the user and token states at login or registration. Sometimes a user does not have an avatar associated with
+  //their account, so that is handled in a separate function below.
   function setAuth(username: string, token: string) {
     setUser(username);
     setToken(token);
   }
 
+  //This function is used when a user changes their avatar in the account settings page.
   const updateAvatar = (newImg: string) => setAvatar(newImg);
 
+  //This function is used when a user changes their username in the user settings page.
   const updateUser = (newUser: string) => setUser(newUser);
 
+  //The logoutHandler logs a user out and clears all information from local storage.
   const logoutHandler = () => {
     axios
       .post(
@@ -46,28 +55,32 @@ function App() {
       )
       .then((res) => {
         console.log(res);
-        setUser('');
-        setToken('');
         localStorage.clear();
       })
       .catch((error) => alert(error));
   };
 
   return (
+    //So begin our routes throughout the site!
     <Router>
+      {/* The navbar is always visible. */}
       <NavBar user={user} logout={logoutHandler} avatar={avatar} auth={token} />
       <Routes>
+        {/* Login */}
         <Route
           path="/login"
           element={<Login setAuth={setAuth} updateAvatar={updateAvatar} />}
         />
+        {/* Registration */}
         <Route
           path="/registration"
           element={
             <Registration setAuth={setAuth} updateAvatar={updateAvatar} />
           }
         />
+        {/* Homepage where logged out or unregistered users land. */}
         <Route path="/" element={<Home />} />
+        {/* Account Settings */}
         <Route
           path="/user_page/:user"
           element={
@@ -80,8 +93,7 @@ function App() {
             />
           }
         />
-        {/* <Route path="/search" element={<Search />} /> */}
-        <Route path="/search" element={<Search token={token} user={user}/>} />
+        <Route path="/search" element={<Search token={token} user={user} />} />
         <Route
           path="games/:gameId"
           element={<GameInfoPage token={token} user={user} />}
@@ -98,10 +110,7 @@ function App() {
           path="/game_night/:gameId"
           element={<VotingForm token={token} />}
         />
-        <Route
-          path="/game_night/:gameId/feedback"
-          element={<FeedbackForm />}
-        />
+        <Route path="/game_night/:gameId/feedback" element={<FeedbackForm />} />
         <Route
           path="/game_night/"
           element={<GameNightMenu user={user} token={token} />}
