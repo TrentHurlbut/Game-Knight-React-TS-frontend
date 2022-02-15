@@ -1,4 +1,5 @@
 # Check out the deployed site at game-knight.netlify.app!!
+Please use your computer browser or tablet. Currently in the process of being optimized for mobile.
 
 ## Screenshots
 
