@@ -1,8 +1,10 @@
+//Imports include links to different views throughout our site, the Game Knight logo, and Material UI components.
 import { Link } from 'react-router-dom';
 import logo from '../assets/bw-logo.png';
 import { Divider, Box } from '@mui/material';
-import { BoltRounded } from '@mui/icons-material';
 
+//Props for the component: a username (string), a logout function, a user avatar (URL, so string), and the auth key sent from
+//the Game Knight back end (string).
 interface navProps {
   user: string;
   logout: any;
